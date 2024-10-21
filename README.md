@@ -24,3 +24,8 @@ This is a React-based application that allows users to explore episodes from the
 - Node.js (>= 14.x)
 - npm (>= 5.x) or yarn
 
+#### Dependencies
+-axios
+-typescript
+-tailwindcss
+-react-icons
