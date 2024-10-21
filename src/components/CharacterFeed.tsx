@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
 
-// Define the type for a Character
 interface Character {
-  id: number;
-  name: string;
-  image: string;
+  id: number; // Unique identifier for each character
+  name: string; // Name of the character
+  image: string; // Image URL of the character
 }
 
 interface CharacterFeedProps {
-  characterUrls: string[];
+  characterUrls: string[]; // Array of character URLs to fetch data from
 }
 
 const CharacterFeed: React.FC<CharacterFeedProps> = ({ characterUrls }) => {
+  // State to hold the character data fetched from the API
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1); // Tracks the current page
-  const charactersPerPage = 15; // Number of characters to display per page
 
+  // State to track the current page for pagination
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const charactersPerPage = 15;
+
+  // useEffect hook to fetch character details when characterUrls change
   useEffect(() => {
     const fetchCharacterDetails = async () => {
+      // Fetch character details for all URLs provided
       const characterData = await Promise.all(
         characterUrls.map(async (url) => {
           const response = await fetch(url);
@@ -26,18 +31,16 @@ const CharacterFeed: React.FC<CharacterFeedProps> = ({ characterUrls }) => {
       );
       setCharacters(characterData);
     };
-    fetchCharacterDetails();
-  }, [characterUrls]);
+    fetchCharacterDetails(); // Call the function to fetch character details
+  }, [characterUrls]); // Dependency array ensures this runs whenever characterUrls change
 
-  // Calculate the characters to display for the current page
-  const indexOfLastCharacter = currentPage * charactersPerPage;
-  const indexOfFirstCharacter = indexOfLastCharacter - charactersPerPage;
+  const indexOfLastCharacter = currentPage * charactersPerPage; // Last character index for current page
+  const indexOfFirstCharacter = indexOfLastCharacter - charactersPerPage; // First character index for current page
   const currentCharacters = characters.slice(
     indexOfFirstCharacter,
     indexOfLastCharacter
-  );
+  ); // Get characters to display on the current page
 
-  // Event handlers for pagination buttons
   const handleNext = () => {
     if (currentPage < Math.ceil(characters.length / charactersPerPage)) {
       setCurrentPage(currentPage + 1);
@@ -53,24 +56,28 @@ const CharacterFeed: React.FC<CharacterFeedProps> = ({ characterUrls }) => {
   return (
     <div className="p-4">
       <h1 className="text-center mb-4 text-2xl font-bold">
-        Rick and Morty Feed
+        Rick and Morty 
       </h1>
       <div className="grid lg:grid-cols-5 gap-4 md:grid-cols-4 sm:grid-cols-3">
         {currentCharacters.map((character) => (
-          <div key={character.id} className="relative transform translate-all hover:scale-105 duration-300">
+          <div
+            key={character.id}
+            className="relative transform translate-all hover:scale-105 duration-300"
+          >
             <img
               src={character.image}
               alt={character.name}
               className="w-[200px] h-[200px] mr-7 rounded-lg shadow-md"
             />
-            <p className="text-center mt-2  font-medium">{character.name}</p>
+            <p className="text-center mt-2 font-medium">{character.name}</p>
           </div>
         ))}
       </div>
+      {/* Pagination buttons */}
       <div className="flex justify-center mt-4 space-x-4">
         <button
           onClick={handlePrev}
-          disabled={currentPage === 1}
+          disabled={currentPage === 1} // Disable button if on the first page
           className={`px-4 py-2 bg-blue-500 text-white rounded ${
             currentPage === 1
               ? "opacity-50 cursor-not-allowed"
@@ -83,7 +90,7 @@ const CharacterFeed: React.FC<CharacterFeedProps> = ({ characterUrls }) => {
           onClick={handleNext}
           disabled={
             currentPage >= Math.ceil(characters.length / charactersPerPage)
-          }
+          } // Disable if on the last page
           className={`px-4 py-2 bg-blue-500 text-white rounded ${
             currentPage >= Math.ceil(characters.length / charactersPerPage)
               ? "opacity-50 cursor-not-allowed"

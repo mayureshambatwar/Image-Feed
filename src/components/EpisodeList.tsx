@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa"; 
 
 interface Episode {
   id: number;
@@ -8,10 +8,10 @@ interface Episode {
 }
 
 interface EpisodeListProps {
-  episodes: Episode[];
-  onSelectEpisode: (episodeUrl: string) => void;
-  isMenuOpen: boolean;
-  setIsMenuOpen: (value: boolean) => void;
+  episodes: Episode[]; // Array of episodes to be displayed
+  onSelectEpisode: (episodeUrl: string) => void; // Function to handle episode selection
+  isMenuOpen: boolean; // State to determine if the menu is open
+  setIsMenuOpen: (value: boolean) => void; // Function to toggle the menu visibility
 }
 
 const EpisodeList: React.FC<EpisodeListProps> = ({
@@ -20,13 +20,18 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
   isMenuOpen,
   setIsMenuOpen,
 }) => {
+  // State to track the currently selected episode
   const [selectedEpisode, setSelectedEpisode] = useState<number | null>(null);
 
+  // Function to handle click on an episode
   const handleEpisodeClick = (id: number, url: string) => {
+    // Check if the clicked episode is already selected
     if (selectedEpisode === id) {
+      // Deselect the episode and load the first episode's characters
       setSelectedEpisode(null);
-      onSelectEpisode(episodes[0].url);
+      onSelectEpisode(episodes[0].url); // Load first episode's characters
     } else {
+      // Select the new episode and load its characters
       setSelectedEpisode(id);
       onSelectEpisode(url);
     }
@@ -45,22 +50,23 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
       </div>
       <div
         className={`${
-          isMenuOpen ? "block" : "hidden"
-        } md:block md:w-64 bg-gray-700 p-4 h-screen overflow-y-auto`}
+          isMenuOpen ? "block" : "hidden" // Toggle visibility based on isMenuOpen state
+        } md:block md:w-64 bg-gray-700 p-4 h-screen overflow-y-auto`} // Set styles for the sidebar
       >
         <h1 className="text-lg text-center font-semibold text-white">Episodes</h1>
         <ul>
+          {/* Map over episodes to display them in a list */}
           {episodes.map((episode) => (
             <li
-              key={episode.id}
+              key={episode.id} // Unique key for each episode item
               className={`cursor-pointer p-2 mb-2 rounded-xl ${
-                selectedEpisode === episode.id
+                selectedEpisode === episode.id // Highlight selected episode
                   ? "bg-blue-500 text-white"
                   : "hover:bg-gray-300 bg-gray-400"
               }`}
-              onClick={() => handleEpisodeClick(episode.id, episode.url)}
+              onClick={() => handleEpisodeClick(episode.id, episode.url)} // Call handleEpisodeClick on click
             >
-              {episode.name}
+              {episode.name} {/* Display episode name */}
             </li>
           ))}
         </ul>
@@ -69,4 +75,4 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
   );
 };
 
-export default EpisodeList;
+export default EpisodeList; 
